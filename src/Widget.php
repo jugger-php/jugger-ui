@@ -4,24 +4,22 @@ namespace jugger\ui;
 
 abstract class Widget
 {
+    protected $params;
+
     public function __construct(array $params = [])
     {
+        $this->params = $params;
         $this->init();
-        $this->initParams($params);
+    }
+
+    public function get(string $name, $default = null)
+    {
+        return $this->params[$name] ?? $default;
     }
 
     protected function init()
     {
         // pass
-    }
-
-    protected function initParams(array $params)
-    {
-        foreach ($params as $name => $value) {
-            if (property_exists($this, $name)) {
-                $this->$name = $value;
-            }
-        }
     }
 
     protected function runInternal(): string
@@ -44,13 +42,17 @@ abstract class Widget
         return $widget->runInternal();
     }
 
-    abstract public function run();
+    public function run()
+    {
+        $this->render();
+    }
 
-    protected function render(string $view, array $params = [])
+    protected function render(string $view = 'index', array $params = [])
     {
         $path = $this->getViewsPath() ."/{$view}.php";
         if (file_exists($path)) {
             include $path;
+            unset($params);
         }
         else {
             throw new \Exception("View '{$view}' not found");
