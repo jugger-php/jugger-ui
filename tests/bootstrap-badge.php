@@ -19,8 +19,9 @@ class BootstrapBadgeTest extends TestCase
                 'pill' => true,
                 'type' => 'danger',
                 'content' => 'value',
+                'id' => 'test',
             ]),
-            "<span class='badge badge-danger badge-pill'>value</span>"
+            "<span class='badge badge-danger badge-pill' id='test'>value</span>"
         );
     }
 }

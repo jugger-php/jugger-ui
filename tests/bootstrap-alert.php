@@ -10,40 +10,35 @@ class BootstrapAlertTest extends TestCase
         $this->assertEquals(
             Alert::widget([
                 'type' => 'success',
-                'content' => 'Test content!',
             ]),
-            "<div class='alert alert-success' role='alert'>Test content!</div>"
+            "<div class='alert alert-success' role='alert'></div>"
         );
         $this->assertEquals(
             Alert::widget([
-                'type' => 'danger',
-                'content' => 'Test content!',
+                'text' => 'Test content!',
             ]),
-            "<div class='alert alert-danger' role='alert'>Test content!</div>"
+            "<div class='alert' role='alert'><p>Test content!</p></div>"
         );
-    }
-
-    public function testHeader()
-    {
         $this->assertEquals(
             Alert::widget([
-                'type' => 'info',
-                'header' => 'Test alert!',
-                'content' => 'Test content...',
+                'header' => 'Test header!',
             ]),
-            "<div class='alert alert-info' role='alert'><h4 class='alert-heading'>Test alert!</h4><p>Test content...</p></div>"
+            "<div class='alert' role='alert'><h4 class='alert-heading'>Test header!</h4></div>"
         );
-    }
-
-    public function testDismiss()
-    {
         $this->assertEquals(
             Alert::widget([
-                'type' => 'warning',
                 'dismiss' => true,
-                'content' => 'Test content...',
             ]),
-            "<div class='alert alert-warning' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>Test content...</div>"
+            "<div class='alert' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden=\"true\">&times;</span></button></div>"
+        );
+        $this->assertEquals(
+            Alert::widget([
+                'dismiss' => true,
+                'type' => 'danger',
+                'header' => 'Test header!',
+                'text' => 'Test content!',
+            ]),
+            "<div class='alert alert-danger' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden=\"true\">&times;</span></button><h4 class='alert-heading'>Test header!</h4><p>Test content!</p></div>"
         );
     }
 }

@@ -1,7 +1,9 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+
 use jugger\ui\bootstrap\breadcrumb\Breadcrumb;
+use jugger\html\tag\Link;
 
 class BreadcrumbTest extends TestCase
 {
@@ -10,25 +12,18 @@ class BreadcrumbTest extends TestCase
         $this->assertEquals(
             Breadcrumb::widget([
                 'items' => [
-                    [
-                        'href' => '/',
-                        'text' => 'Link1',
-                    ],
+                    new Link('Link1', '/'),
                     '<li>Link2</li>',
-                    [
-                        'text' => 'Link3',
-                    ],
+                    new Link('Link3'),
                 ],
             ]),
             "<ol class='breadcrumb'><li class='breadcrumb-item'><a href='/'>Link1</a></li><li>Link2</li><li class='breadcrumb-item active'><a href='#'>Link3</a></li></ol>"
         );
         $this->assertEquals(
             Breadcrumb::widget([
-                'options' => [
-                    'id' => 'my-breadcrumb',
-                ],
+                'id' => 'my-breadcrumb',
             ]),
-            "<ol id='my-breadcrumb' class='breadcrumb'></ol>"
+            "<ol class='breadcrumb' id='my-breadcrumb'></ol>"
         );
     }
 }
