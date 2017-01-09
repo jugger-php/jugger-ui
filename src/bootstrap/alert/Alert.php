@@ -2,41 +2,64 @@
 
 namespace jugger\ui\bootstrap\alert;
 
-use jugger\ui\Widget;
-use jugger\html\Html;
+use jugger\ds\Ds;
+use jugger\html\ContentTag;
+use jugger\html\tag\P;
+use jugger\html\tag\Button;
 
-class Alert extends Widget
+class Alert extends ContentTag
 {
-    public function run()
-    {
-        $header = $this->get('header');
-        $options = $this->getOptions();
-        $content = $this->get('content', '');
-        $dismiss = $this->get('dismiss', false);
+    public $type;
+    public $text;
+    public $header;
+    public $dismiss;
 
-        echo Html::beginTag('div', $options);
-        if ($header) {
-            echo Html::h4($header, ['class' => 'alert-heading']);
-            echo Html::p($content);
+    public function __construct(array $params)
+    {
+        $this->class = 'alert';
+        $params = Ds::arr($params);
+
+        if ($params['type']) {
+            $this->class .= " alert-{$params['type']}";
         }
-        elseif ($dismiss) {
-            echo "<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>";
-            echo $content;
+        if ($params['dismiss']) {
+            $this->addDismiss();
         }
-        else {
-            echo $content;
+        if ($params['header']) {
+            $this->addHeader($params['header']);
         }
-        echo Html::endTag('div');
+        if ($params['text']) {
+            $this->addText($params['text']);
+        }
+
+        $params->removeKeys('type', 'text', 'header', 'dismiss')->merge(['role' => 'alert']);
+        parent::__construct('div', '', $params->toArray());
     }
 
-    public function getOptions()
+    public function addHeader(string $value)
     {
-        $options = [
-            'class' => 'alert',
-            'role' => 'alert',
-        ];
-        $options['class'] .= " alert-".$this->get('type', 'info');
+        $this->add(new ContentTag('h4', $value, ['class' => 'alert-heading']));
+    }
 
-        return array_merge($options, $this->get('options', []));
+    public function addText(string $value)
+    {
+        $this->add(new P($value));
+    }
+
+    public function addDismiss()
+    {
+        $this->add(new Button(
+            '<span aria-hidden="true">&times;</span>',
+            [
+                'type' => 'button',
+                'class' => 'close',
+                'data' => [
+                    'dismiss' => 'alert',
+                ],
+                'aria' => [
+                    'label' => 'Close',
+                ],
+            ]
+        ));
     }
 }
