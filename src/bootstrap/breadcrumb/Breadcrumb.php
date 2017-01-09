@@ -2,66 +2,48 @@
 
 namespace jugger\ui\bootstrap\breadcrumb;
 
-use jugger\ui\Widget;
-use jugger\html\Html;
+use jugger\ds\Ds;
+use jugger\html\Tag;
+use jugger\html\EmptyTag;
+use jugger\html\ContentTag;
+use jugger\html\tag\Li;
+use jugger\html\bootstrap\ItemsTrait;
 
-class Breadcrumb extends Widget
+class Breadcrumb extends ContentTag
 {
-    public function run()
-    {
-        $items = $this->getItems();
-        $options = $this->getOptions();
+    use ItemsTrait;
 
-        echo Html::beginTag('ol', $options);
+    public function __construct(array $params)
+    {
+        $this->class = 'breadcrumb';
+
+        $params = Ds::arr($params);
+        if ($params['items']) {
+            $this->addItems($params['items']);
+        }
+
+        $params->removeKeys('items');
+        parent::__construct('ol', '', $params->toArray());
+    }
+
+    public function addItems(array $items)
+    {
         foreach ($items as $item) {
-            echo $item;
-        }
-        echo Html::endTag('ol');
-    }
-
-    public function getOptions()
-    {
-        $options = [
-            'class' => 'breadcrumb',
-        ];
-        return array_merge($options, $this->get('options', []));
-    }
-
-    public function getItems()
-    {
-        $ret = [];
-        $items = $this->get('items', []);
-        foreach ($items as $item) {
-            $isActive = end($items) === $item;
-            $ret[] = $this->renderItem($item, $isActive);
-        }
-        return $ret;
-    }
-
-    public function renderItem($item, bool $isActive)
-    {
-        if (is_string($item)) {
-            return $item;
-        }
-        elseif (is_array($item)) {
-            $options = [
-                'class' => 'breadcrumb-item'
-            ];
-            if ($isActive) {
-                $options['class'] .= ' active';
+            if (is_string($item)) {
+                $this->add(new EmptyTag($item));
             }
-            return Html::li($this->renderItemLink($item), $options);
+            elseif ($item instanceof Tag) {
+                $li = new Li();
+                $li->class = 'breadcrumb-item';
+                $li->add($item);
+                if (end($items) === $item) {
+                    $li->class .= " active";
+                }
+                $this->add($li);
+            }
+            else {
+                throw new \Exception('Invalide type of item. Must be only "string" or implements "\jugger\html\Tag"');
+            }
         }
-        else {
-            throw new \Exception("Invalide type of parametr 'item': ". gettype($item));
-        }
-    }
-
-    public function renderItemLink(array $item)
-    {
-        $text = $item['text'];
-        $href = $item['href'] ?? '#';
-
-        return Html::a($text, $href);
     }
 }
