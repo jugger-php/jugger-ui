@@ -2,20 +2,25 @@
 
 namespace jugger\ui\bootstrap\badge;
 
-use jugger\ui\Widget;
-use jugger\html\Html;
+use jugger\ds\Ds;
+use jugger\html\ContentTag;
 
-class Badge extends Widget
+class Badge extends ContentTag
 {
-    public function run()
+    public function __construct(array $params)
     {
-        $type = $this->get('type', 'default');
-        $class = "badge badge-{$type}";
-        if ($this->get('pill', false)) {
-            $class .= " badge-pill";
-        }
-        $content = $this->get('content', '');
+        $this->class = 'badge';
+        $params = Ds::arr($params);
+        $content = $params['content'] ?? '';
 
-        return Html::contentTag('span', $content, compact('class'));
+        if ($params['type']) {
+            $this->class .= " badge-{$params['type']}";
+        }
+        if ($params['pill']) {
+            $this->class .= " badge-pill";
+        }
+
+        $params->removeKeys('type', 'pill', 'content');
+        parent::__construct('span', $content, $params->toArray());
     }
 }
