@@ -25,15 +25,4 @@ abstract class Widget
         $class = new $class(...$params);
         return $class->render();
     }
-
-    // public function renderView(string $viewName)
-    // {
-    //     $path = $this->getViewsPath() ."/{$viewName}.php";
-    //     if (file_exists($path)) {
-    //         return new View($path);
-    //     }
-    //     else {
-    //         throw new \Exception("Not found view '{$viewName}'");
-    //     }
-    // }
 }
