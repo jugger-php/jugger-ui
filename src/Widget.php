@@ -2,8 +2,21 @@
 
 namespace jugger\ui;
 
+use jugger\base\Configurator;
+
 abstract class Widget
 {
+    public function __construct(array $options = [])
+    {
+        Configurator::setValues($this, $options);
+        $this->init();
+    }
+
+    public function init()
+    {
+        
+    }
+
     public function render()
     {
         try {
@@ -19,10 +32,10 @@ abstract class Widget
 
     abstract public function run();
 
-    public static function widget(...$params)
+    public static function widget(array $options = [])
     {
         $class = get_called_class();
-        $class = new $class(...$params);
+        $class = new $class($options);
         return $class->render();
     }
 }
