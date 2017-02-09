@@ -1,6 +1,5 @@
 {
     "name": "jugger-php/jugger-ui",
-    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
             "jugger\\ui\\": "src/"
@@ -8,6 +7,6 @@
     },
     "require": {
         "php": "^7.0.9",
-        "jugger-php/jugger-html": "^1"
+        "jugger-php/jugger-base": "^1"
     }
 }
