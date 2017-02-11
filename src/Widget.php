@@ -14,7 +14,7 @@ abstract class Widget
 
     public function init()
     {
-        
+
     }
 
     public function render()
@@ -28,6 +28,11 @@ abstract class Widget
         finally {
             ob_end_clean();
         }
+    }
+
+    public function __toString()
+    {
+        return $this->render();
     }
 
     abstract public function run();
